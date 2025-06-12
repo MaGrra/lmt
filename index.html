@@ -99,7 +99,12 @@
       flex: 1 1 30%;
       text-align: right;
       font-weight: bold;
+      padding-left: 10px;
     }
+
+    .gold { background-color: #fff8dc; }  /* light gold */
+    .silver { background-color: #f0f0f0; } /* light silver */
+    .bronze { background-color: #fbe4d5; } /* light bronze */
 
     @media (max-width: 600px) {
       li {
@@ -130,7 +135,7 @@
 
   <script>
     const sheetId = '1Hyn_rIchkMoGS3DODq9bTIygFBpBLKb0su9NnmubVys';
-    const cutoff = new Date("2025-06-13T11:00:00Z"); // 14:00 Latvia time
+    const cutoff = new Date("2025-06-13T11:00:00Z");
     let frozenData = {};
     let frozen = false;
 
@@ -187,6 +192,12 @@
       list.innerHTML = '';
       data.forEach((row, i) => {
         const li = document.createElement('li');
+        let rankClass = '';
+        if (i === 0) rankClass = 'gold';
+        else if (i === 1) rankClass = 'silver';
+        else if (i === 2) rankClass = 'bronze';
+
+        li.className = rankClass;
         li.innerHTML = `
           <span class="rank">#${i + 1}</span>
           <span class="team-name">${row.team}</span>
