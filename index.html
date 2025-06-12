@@ -116,9 +116,10 @@
       const timerText = document.getElementById("timerText");
       if (now < cutoff) {
         const diff = Math.max(0, cutoff - now);
-        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(diff / 3600000);
+        const minutes = Math.floor((diff % 3600000) / 60000);
         const seconds = Math.floor((diff % 60000) / 1000);
-        timerText.textContent = `Rezultātu atjaunošana tiks apturēta pēc ${minutes} min ${seconds} sek.`;
+        timerText.textContent = `Rezultātu atjaunošana tiks apturēta pēc ${hours} h ${minutes} min ${seconds} sek.`;
       } else {
         timerText.textContent = `Rezultātu atjaunošana tika apturēta 14:00`;
         frozen = true;
