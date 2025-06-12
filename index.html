@@ -72,7 +72,8 @@
     }
 
     ol {
-      padding-left: 20px;
+      padding-left: 0;
+      list-style-type: none;
     }
 
     li {
@@ -80,12 +81,34 @@
       border-bottom: 1px solid #f0c0c0;
       display: flex;
       justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .rank {
+      font-weight: bold;
+      margin-right: 10px;
+      min-width: 40px;
+    }
+
+    .team-name {
+      flex: 1 1 60%;
+      word-wrap: break-word;
+    }
+
+    .score {
+      flex: 1 1 30%;
+      text-align: right;
+      font-weight: bold;
     }
 
     @media (max-width: 600px) {
       li {
-        flex-direction: column;
+        flex-direction: row;
         align-items: flex-start;
+      }
+      .score {
+        text-align: left;
+        margin-top: 5px;
       }
     }
   </style>
@@ -107,7 +130,7 @@
 
   <script>
     const sheetId = '1Hyn_rIchkMoGS3DODq9bTIygFBpBLKb0su9NnmubVys';
-    const cutoff = new Date("2025-06-13T11:00:00Z"); // 14:00 Latvia time (UTC+3) on June 13
+    const cutoff = new Date("2025-06-13T11:00:00Z"); // 14:00 Latvia time
     let frozenData = {};
     let frozen = false;
 
@@ -164,7 +187,11 @@
       list.innerHTML = '';
       data.forEach((row, i) => {
         const li = document.createElement('li');
-        li.innerHTML = `<strong>#${i + 1}</strong> ${row.team} <span>${row.score}</span>`;
+        li.innerHTML = `
+          <span class="rank">#${i + 1}</span>
+          <span class="team-name">${row.team}</span>
+          <span class="score">${row.score}</span>
+        `;
         list.appendChild(li);
       });
     }
