@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Rankings</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #ffe5e5; /* light red */
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      border: 2px solid #e0a0a0;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      background-color: #ff5c5c;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    button:hover {
+      background-color: #e14a4a;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #aa2b2b;
+    }
+
+    ol {
+      padding-left: 20px;
+    }
+
+    li {
+      padding: 10px;
+      border-bottom: 1px solid #f0c0c0;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    @media (max-width: 600px) {
+      li {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="button-row">
+      <button onclick="showSheet('Tautas')">Tautas</button>
+      <button onclick="showSheet('Sporta')">Sporta</button>
+    </div>
+
+    <h2 id="title">Tautas</h2>
+    <ol id="teamList"></ol>
+  </div>
+
+  <script>
+    const sheetId = '1Hyn_rIchkMoGS3DODq9bTIygFBpBLKb0su9NnmubVys';
+
+    async function fetchSheet(sheetName) {
+      const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
+      const response = await fetch(url);
+      const text = await response.text();
+      const json = JSON.parse(text.substr(47).slice(0, -2));
+      const rows = json.table.rows.map(r => ({
+        team: r.c[1]?.v || 'No Name',
+        score: parseFloat(r.c[40]?.v || 0)
+      }));
+      return rows;
+    }
+
+    async function showSheet(sheetName) {
+      document.getElementById('title').textContent = sheetName;
+      const data = await fetchSheet(sheetName);
+      data.sort((a, b) => b.score - a.score);
+
+      const list = document.getElementById('teamList');
+      list.innerHTML = '';
+      data.forEach((row, i) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>#${i + 1}</strong> ${row.team} <span>${row.score}</span>`;
+        list.appendChild(li);
+      });
+    }
+
+    showSheet('Tautas');
+  </script>
+</body>
+</html>
