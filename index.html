@@ -33,7 +33,14 @@
       font-size: 24px;
       font-weight: bold;
       color: #aa2b2b;
+      margin-bottom: 10px;
+    }
+
+    .timer-text {
+      text-align: center;
+      font-size: 16px;
       margin-bottom: 20px;
+      color: #444;
     }
 
     .button-row {
@@ -85,8 +92,9 @@
 </head>
 <body>
   <div class="container">
-   <img class="header-image" src="jhmfnfg.jpg" alt="Banner">
+    <img class="header-image" src="jhmfnfg.jpg" alt="Banner">
     <div class="title-main">Rezultāti</div>
+    <div class="timer-text" id="timerText"></div>
 
     <div class="button-row">
       <button onclick="showSheet('Tautas')">Tautas</button>
@@ -99,6 +107,26 @@
 
   <script>
     const sheetId = '1Hyn_rIchkMoGS3DODq9bTIygFBpBLKb0su9NnmubVys';
+    const cutoff = new Date("2025-06-14T11:00:00Z"); // 14:00 Latvia time (UTC+3)
+    let frozenData = {};
+    let frozen = false;
+
+    function updateTimer() {
+      const now = new Date();
+      const timerText = document.getElementById("timerText");
+      if (now < cutoff) {
+        const diff = Math.max(0, cutoff - now);
+        const minutes = Math.floor(diff / 60000);
+        const seconds = Math.floor((diff % 60000) / 1000);
+        timerText.textContent = `Rezultātu atjaunošana tiks apturēta pēc ${minutes} min ${seconds} sek.`;
+      } else {
+        timerText.textContent = `Rezultātu atjaunošana tika apturēta 14:00`;
+        frozen = true;
+      }
+    }
+
+    setInterval(updateTimer, 1000);
+    updateTimer();
 
     async function fetchSheet(sheetName) {
       const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
@@ -114,9 +142,23 @@
 
     async function showSheet(sheetName) {
       document.getElementById('title').textContent = sheetName;
+
+      if (frozen && frozenData[sheetName]) {
+        renderList(frozenData[sheetName]);
+        return;
+      }
+
       const data = await fetchSheet(sheetName);
       data.sort((a, b) => b.score - a.score);
 
+      if (frozen) {
+        frozenData[sheetName] = data;
+      }
+
+      renderList(data);
+    }
+
+    function renderList(data) {
       const list = document.getElementById('teamList');
       list.innerHTML = '';
       data.forEach((row, i) => {
