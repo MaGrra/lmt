@@ -79,43 +79,38 @@
     li {
       padding: 10px;
       border-bottom: 1px solid #f0c0c0;
+    }
+
+    .row {
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
+      width: 100%;
+      flex-wrap: nowrap;
+      gap: 10px;
     }
 
     .rank {
+      flex: 0 0 auto;
       font-weight: bold;
-      margin-right: 10px;
       min-width: 40px;
     }
 
     .team-name {
-      flex: 1 1 60%;
+      flex: 1 1 auto;
       word-wrap: break-word;
     }
 
     .score {
-      flex: 1 1 30%;
+      flex: 0 0 auto;
       text-align: right;
       font-weight: bold;
-      padding-left: 10px;
+      min-width: 40px;
     }
 
-    .gold { background-color: #fff8dc; }  /* light gold */
-    .silver { background-color: #f0f0f0; } /* light silver */
-    .bronze { background-color: #fbe4d5; } /* light bronze */
-
-    @media (max-width: 600px) {
-      li {
-        flex-direction: row;
-        align-items: flex-start;
-      }
-      .score {
-        text-align: left;
-        margin-top: 5px;
-      }
-    }
+    .gold { background-color: #fff8dc; }
+    .silver { background-color: #f0f0f0; }
+    .bronze { background-color: #fbe4d5; }
   </style>
 </head>
 <body>
@@ -199,9 +194,11 @@
 
         li.className = rankClass;
         li.innerHTML = `
-          <span class="rank">#${i + 1}</span>
-          <span class="team-name">${row.team}</span>
-          <span class="score">${row.score}</span>
+          <div class="row">
+            <span class="rank">#${i + 1}</span>
+            <span class="team-name">${row.team}</span>
+            <span class="score">${row.score}</span>
+          </div>
         `;
         list.appendChild(li);
       });
