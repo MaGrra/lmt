@@ -7,7 +7,7 @@
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #ffe5e5; /* light red */
+      background-color: #ffe5e5;
       margin: 0;
       padding: 20px;
     }
@@ -20,6 +20,20 @@
       border-radius: 12px;
       padding: 20px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .header-image {
+      width: 100%;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    .title-main {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #aa2b2b;
+      margin-bottom: 20px;
     }
 
     .button-row {
@@ -71,6 +85,9 @@
 </head>
 <body>
   <div class="container">
+    <img class="header-image" src="https://drive.google.com/uc?export=view&id=1dioP3bV-6RfrZvWAzaCyGcvD6rz1mLjq" alt="Banner">
+    <div class="title-main">Rezultāti</div>
+
     <div class="button-row">
       <button onclick="showSheet('Tautas')">Tautas</button>
       <button onclick="showSheet('Sporta')">Sporta</button>
@@ -89,9 +106,9 @@
       const text = await response.text();
       const json = JSON.parse(text.substr(47).slice(0, -2));
       const rows = json.table.rows.map(r => ({
-        team: r.c[1]?.v || 'No Name',
+        team: r.c[1]?.v,
         score: parseFloat(r.c[40]?.v || 0)
-      }));
+      })).filter(r => r.team && r.team.trim() !== '');
       return rows;
     }
 
